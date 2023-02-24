@@ -17,6 +17,7 @@ const li = (innerHtml, color = "black") => {
   return li
 }
 
+const evtSources = []
 void [[8081, ul8081], [8082, ul8082]].forEach(([port, ul]) => {
   const evtSource = new EventSource(`http://localhost:${port}/streaming`)
   evtSource.onmessage = event => {
@@ -33,4 +34,9 @@ void [[8081, ul8081], [8082, ul8082]].forEach(([port, ul]) => {
     console.log(`open ${port}`, event)
     ul.appendChild(li(event.type, "blue"))
   }
+
+  evtSources.push(evtSource)
 })
+
+document.getElementById("close8081").addEventListener("click", () => evtSources[0].close())
+document.getElementById("close8082").addEventListener("click", () => evtSources[1].close())
